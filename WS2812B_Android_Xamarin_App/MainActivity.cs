@@ -19,11 +19,22 @@ namespace WS2812B_Android_Xamarin_App
             SetContentView(Resource.Layout.activity_main);
 
             Button controlCenterButton = FindViewById<Button>(Resource.Id.ControlCenterButton);
+            Button alarmClockButton = FindViewById<Button>(Resource.Id.AlarmClockButton);
+            Button settingsButton = FindViewById<Button>(Resource.Id.SettingsButton);
 
             controlCenterButton.Click += (sender, e) =>
             {
                 StartActivity(typeof(ControlCenterActivity));
             };
+            /*alarmClockButton.Click += (sender, e) =>
+            {
+                StartActivity(typeof(AlarmClockActivity));
+            };*/
+            settingsButton.Click += (sender, e) =>
+            {
+                StartActivity(typeof(SettingsActivity));
+            };
+
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
