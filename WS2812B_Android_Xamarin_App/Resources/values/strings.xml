@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WS2812B_Android_Xamarin_App</string>
+    <string name="action_settings">Settings</string>
+</resources>

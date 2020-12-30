@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WS2812B_Android_Xamarin_App", "WS2812B_Android_Xamarin_App\WS2812B_Android_Xamarin_App.csproj", "{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B488B1C-3E8D-440C-8FC8-EF3D53BB5A09}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70759844-A524-4DCC-B4F4-A7496CE6C4A3}
+	EndGlobalSection
+EndGlobal
