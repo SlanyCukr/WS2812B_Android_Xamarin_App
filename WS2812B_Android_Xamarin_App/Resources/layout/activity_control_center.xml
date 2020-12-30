@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:text="Navigation"
+        android:text="Control center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,29 +14,29 @@
         android:minHeight="25px"
         android:layout_marginTop="25px"
         android:id="@+id/HeaderText"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
     <Button
-        android:text="Control center"
-        android:layout_width="150.0dp"
+        android:text="Turn on"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/HeaderText"
         android:layout_marginTop="25px"
-        android:id="@+id/ControlCenterButton"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/TurnOnButton"
+        android:layout_centerHorizontal="true" />
     <Button
-        android:text="Alarm clock"
-        android:layout_width="150.0dp"
+        android:text="Turn off"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ControlCenterButton"
+        android:layout_below="@id/TurnOnButton"
         android:layout_marginTop="25px"
-        android:id="@+id/AlarmClockButton"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/TurnOffButton"
+        android:layout_centerHorizontal="true" />
     <Button
-        android:text="Settings"
-        android:layout_width="150.0dp"
+        android:text="Rainbow"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/AlarmClockButton"
+        android:layout_below="@id/TurnOffButton"
         android:layout_marginTop="25px"
-        android:id="@+id/SettingsButton"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/RainbowButton"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
