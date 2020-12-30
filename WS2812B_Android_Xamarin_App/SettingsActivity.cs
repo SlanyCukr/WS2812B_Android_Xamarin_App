@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
+using Xamarin.Essentials;
 
 namespace WS2812B_Android_Xamarin_App
 {
@@ -27,6 +28,12 @@ namespace WS2812B_Android_Xamarin_App
             Button findServerButton = FindViewById<Button>(Resource.Id.FindServerButton);
             EditText serverIPAddress = FindViewById<EditText>(Resource.Id.ServerIPAddress);
 
+            // find saved serverIPAddress in settings
+            if (Preferences.ContainsKey("serverIPAddress"))
+            {
+                serverIPAddress.Text = Preferences.Get("serverIPAddress", "");
+            }
+           
             findServerButton.Click += async (sender, e) =>
             {
                 serverIPAddress.SetTextColor(Android.Graphics.Color.Red);
@@ -53,12 +60,13 @@ namespace WS2812B_Android_Xamarin_App
                             {
                                 serverIPAddress.Text = searchedIP;
                                 serverIPAddress.SetTextColor(Android.Graphics.Color.DarkGreen);
+
+                                Preferences.Set("serverIPAddress", searchedIP);
                                 break;
                             }
                         }
                         catch(Exception)
                         {
-
                         }
                     }
                 }

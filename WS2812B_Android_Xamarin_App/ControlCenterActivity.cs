@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Http;
+using Xamarin.Essentials;
 
 namespace WS2812B_Android_Xamarin_App
 {
@@ -30,17 +31,17 @@ namespace WS2812B_Android_Xamarin_App
             turnOnButton.Click += async (sender, e) =>
             {
                 var client = new HttpClient();
-                await client.GetAsync("http://192.168.0.114/turn_on");
+                await client.GetAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")));
             };
             turnOffButton.Click += async (sender, e) =>
             {
                 var client = new HttpClient();
-                await client.GetAsync("http://192.168.0.114/turn_off");
+                await client.GetAsync(string.Format("http://{0}:5000/turn_off", Preferences.Get("serverIPAddress", "192.168.0.114")));
             };
             rainbowButton.Click += (sender, e) =>
             {
                 var client = new HttpClient();
-                client.GetAsync("http://192.168.0.114/rainbow");
+                client.GetAsync(string.Format("http://{0}:5000/rainbow", Preferences.Get("serverIPAddress", "192.168.0.114")));
             };
         }
     }
