@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace WS2812B_Android_Xamarin_App
 {
@@ -20,7 +21,7 @@ namespace WS2812B_Android_Xamarin_App
     {
         private Timer timer;
         private List<double> NumBytesList;
-        private Byte[] audioBuffer = null;
+        private short[] audioBuffer = null;
         private AudioRecord audioRecord = null; 
 
         public override IBinder OnBind(Intent intent)
@@ -33,12 +34,13 @@ namespace WS2812B_Android_Xamarin_App
             Toast.MakeText(this, "Alarm is set!", ToastLength.Long).Show();
 
             NumBytesList = new List<double>();
-            audioBuffer = new Byte[100000];
+            var bufferSize = AudioRecord.GetMinBufferSize(8000, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit);
+            audioBuffer = new short[bufferSize];
             audioRecord = new AudioRecord(
                         // Hardware source of recording.
                         AudioSource.Mic,
                         // Frequency
-                        11025,
+                        8000,
                         // Mono or stereo
                         ChannelIn.Mono,
                         // Audio encoding
@@ -46,26 +48,41 @@ namespace WS2812B_Android_Xamarin_App
                         // Length of the audio clip.
                         audioBuffer.Length
                         );
-            timer = new Timer((e) => MainLoop(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+                        audioRecord.StartRecording();
+            //timer = new Timer((e) => MainLoop(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
+            MainLoop();
 
             return StartCommandResult.Sticky;
         }
 
         public void MainLoop()
         {
-            audioRecord.StartRecording();
-            int numBytes = audioRecord.Read(audioBuffer, 0, audioBuffer.Length);
-            audioRecord.Stop();
-            audioRecord.Release();
-
-            double sum = 0;
-            for (int i = 0; i < numBytes; i++)
+            Thread tread = new Thread(() =>
             {
-                sum += audioBuffer[i];
-            }
-            var level = sum / numBytes;
+                while (true)
+                {
+                    int numBytes = audioRecord.Read(audioBuffer, 0, audioBuffer.Length);
 
-            NumBytesList.Add(level);
+                    double sum = 0;
+                    for (int i = 0; i < numBytes; i++)
+                    {
+                        sum += Math.Abs(audioBuffer[i]);
+                    }
+                    var level = sum / numBytes;
+                    var db = 20.0 * Math.Log10(level / 32767.0) + 90;
+
+                    NumBytesList.Add(db);
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        Toast.MakeText(this, db.ToString(), ToastLength.Long).Show();
+                    });
+
+                    Thread.Sleep(1000);
+                }
+            });
+            tread.Start();
         }
 
         public override void OnDestroy()
