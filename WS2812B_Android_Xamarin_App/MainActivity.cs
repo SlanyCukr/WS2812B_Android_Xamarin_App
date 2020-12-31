@@ -26,10 +26,10 @@ namespace WS2812B_Android_Xamarin_App
             {
                 StartActivity(typeof(ControlCenterActivity));
             };
-            /*alarmClockButton.Click += (sender, e) =>
+            alarmClockButton.Click += (sender, e) =>
             {
                 StartActivity(typeof(AlarmClockActivity));
-            };*/
+            };
             settingsButton.Click += (sender, e) =>
             {
                 StartActivity(typeof(SettingsActivity));

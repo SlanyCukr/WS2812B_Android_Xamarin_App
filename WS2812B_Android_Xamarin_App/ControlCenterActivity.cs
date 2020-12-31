@@ -31,17 +31,17 @@ namespace WS2812B_Android_Xamarin_App
             turnOnButton.Click += async (sender, e) =>
             {
                 var client = new HttpClient();
-                await client.GetAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")));
+                await client.PostAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
             };
             turnOffButton.Click += async (sender, e) =>
             {
                 var client = new HttpClient();
-                await client.GetAsync(string.Format("http://{0}:5000/turn_off", Preferences.Get("serverIPAddress", "192.168.0.114")));
+                await client.PostAsync(string.Format("http://{0}:5000/turn_off", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
             };
             rainbowButton.Click += (sender, e) =>
             {
                 var client = new HttpClient();
-                client.GetAsync(string.Format("http://{0}:5000/rainbow", Preferences.Get("serverIPAddress", "192.168.0.114")));
+                client.PostAsync(string.Format("http://{0}:5000/rainbow", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
             };
         }
     }
