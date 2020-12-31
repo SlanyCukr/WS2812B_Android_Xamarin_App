@@ -23,9 +23,8 @@ namespace WS2812B_Android_Xamarin_App
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.activity_alarm_clock);
-            // Create your application here
+            
             Button startClockButton = FindViewById<Button>(Resource.Id.StartClockButton);
-
             startClockButton.Click += (sender, e) =>
             {
                 // check microphone permission

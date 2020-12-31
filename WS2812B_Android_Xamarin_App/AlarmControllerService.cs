@@ -19,11 +19,10 @@ namespace WS2812B_Android_Xamarin_App
     [Service]
     class AlarmControllerService : Service
     {
-        private Timer timer;
-        private List<double> NumBytesList;
+        private List<VolumeRecord> volumeRecordList;
         private short[] audioBuffer = null;
-        private AudioRecord audioRecord = null; 
-
+        private AudioRecord audioRecord = null;
+        
         public override IBinder OnBind(Intent intent)
         {
             return null;
@@ -33,7 +32,7 @@ namespace WS2812B_Android_Xamarin_App
         {
             Toast.MakeText(this, "Alarm is set!", ToastLength.Long).Show();
 
-            NumBytesList = new List<double>();
+            volumeRecordList = new List<VolumeRecord>();
             var bufferSize = AudioRecord.GetMinBufferSize(8000, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit);
             audioBuffer = new short[bufferSize];
             audioRecord = new AudioRecord(
@@ -49,8 +48,7 @@ namespace WS2812B_Android_Xamarin_App
                         audioBuffer.Length
                         );
                         audioRecord.StartRecording();
-            //timer = new Timer((e) => MainLoop(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-
+            
             MainLoop();
 
             return StartCommandResult.Sticky;
@@ -58,7 +56,7 @@ namespace WS2812B_Android_Xamarin_App
 
         public void MainLoop()
         {
-            Thread tread = new Thread(() =>
+            Thread thread1 = new Thread(() =>
             {
                 while (true)
                 {
@@ -72,17 +70,37 @@ namespace WS2812B_Android_Xamarin_App
                     var level = sum / numBytes;
                     var db = 20.0 * Math.Log10(level / 32767.0) + 90;
 
-                    NumBytesList.Add(db);
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        Toast.MakeText(this, db.ToString(), ToastLength.Long).Show();
-                    });
+                    volumeRecordList.Add(new VolumeRecord(db));
 
                     Thread.Sleep(1000);
                 }
             });
-            tread.Start();
+            thread1.Start();
+
+            Thread thread2 = new Thread(() =>
+            {
+                while (true)
+                {
+                    // check if on average user is in REM sleep and the time is right to wake him up
+                    if (volumeRecordList.Count >= 50)
+                    {
+                        double sum = 0;
+                        for (int i = volumeRecordList.Count - 50; i < volumeRecordList.Count; i++)
+                            sum += volumeRecordList[i].Loudness;
+
+                        double avg = sum / 50;
+
+                        // 55.8 is just arbitrary number, needs to be verified; TODO - check the datetime
+                        if(avg >= 55.8)
+                        {
+
+                        }
+                    }
+
+                    Thread.Sleep(50000);
+                }
+            });
+            thread2.Start();
         }
 
         public override void OnDestroy()
