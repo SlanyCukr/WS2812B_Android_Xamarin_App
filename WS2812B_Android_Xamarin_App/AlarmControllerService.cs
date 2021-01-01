@@ -130,10 +130,9 @@ namespace WS2812B_Android_Xamarin_App
         {
             base.OnDestroy();
 
+            // terminate running threads
             Thread1.Abort();
             Thread2.Abort();
-
-            Toast.MakeText(this, "Alarm was destroyed.", ToastLength.Long).Show();
         }
     }
 }

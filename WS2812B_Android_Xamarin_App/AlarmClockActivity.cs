@@ -106,10 +106,13 @@ namespace WS2812B_Android_Xamarin_App
 
             StopClockButton.Click += (sender, e) =>
             {
-                StopService(Intent);
+                // only stop the service if it is running
+                if(Intent != null)
+                    StopService(Intent);
+
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
-                Recreate();
+                //Recreate();
             };
 
         }
@@ -123,6 +126,14 @@ namespace WS2812B_Android_Xamarin_App
 
                 LoudnessGraph.Visibility = ViewStates.Visible;
                 StopClockButton.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                StartClockButton.Visibility = ViewStates.Visible;
+                PickTime.Visibility = ViewStates.Visible;
+
+                LoudnessGraph.Visibility = ViewStates.Gone;
+                StopClockButton.Visibility = ViewStates.Gone;
             }
         }
     }
