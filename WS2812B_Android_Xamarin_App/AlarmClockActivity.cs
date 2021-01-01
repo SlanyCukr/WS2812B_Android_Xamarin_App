@@ -7,6 +7,9 @@ using Android.Runtime;
 using Android.Support.V4.Content;
 using Android.Views;
 using Android.Widget;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using OxyPlot.Xamarin.Android;
 using System;
 using System.Collections.Generic;
@@ -25,6 +28,17 @@ namespace WS2812B_Android_Xamarin_App
         private PlotView LoudnessGraph;
         private Button StopClockButton;
 
+        private Intent Intent;
+
+        private static PlotModel Model { get; set; }
+        private static LineSeries Series { get; set; }
+
+        public static void AddPoint(DataPoint point)
+        {
+            Series.Points.Add(point);
+            Model.InvalidatePlot(true);
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -36,9 +50,20 @@ namespace WS2812B_Android_Xamarin_App
             LoudnessGraph = FindViewById<PlotView>(Resource.Id.LoudnessGraph);
             StopClockButton = FindViewById<Button>(Resource.Id.StopClockButton);
 
-            //
-            LoudnessGraph.Model = 
+            // setup graph
+            Series = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 2,
+                MarkerStroke = OxyColors.White
+             };
 
+            Model = new PlotModel { Title = "Loudness graph" };
+            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled=false, IsPanEnabled=false });
+            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Maximum = 100, Minimum = 10, IsZoomEnabled=false, IsPanEnabled=false });
+            Model.Series.Add(Series);
+            LoudnessGraph.Model = Model;
+        
             // set visibility of startClockButton and pickTime
             HandleVisibility();
 
@@ -75,14 +100,16 @@ namespace WS2812B_Android_Xamarin_App
                     RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, 0);
                 }
 
-                Intent intent = new Intent(this, typeof(AlarmControllerService));
-                StartService(intent);
+                Intent = new Intent(this, typeof(AlarmControllerService));
+                StartService(Intent);
             };
 
             StopClockButton.Click += (sender, e) =>
             {
+                StopService(Intent);
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
+                Recreate();
             };
 
         }

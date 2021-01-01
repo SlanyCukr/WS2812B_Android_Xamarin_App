@@ -22,14 +22,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/LoudnessGraph"
+        android:layout_marginBottom="200px"
         android:visibility="gone"/>
     <Button
         android:text="Stop clock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25px"
         android:id="@+id/StopClockButton"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"/>
 </RelativeLayout>
