@@ -50,13 +50,19 @@ namespace WS2812B_Android_Xamarin_App
             LoudnessGraph = FindViewById<PlotView>(Resource.Id.LoudnessGraph);
             StopClockButton = FindViewById<Button>(Resource.Id.StopClockButton);
 
+            // try to gain access to persisted data points
+            List<DataPoint> temp = new List<DataPoint>();
+            if(Series != null)
+                temp = Series.Points;
+
             // setup graph
             Series = new LineSeries
             {
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 2,
-                MarkerStroke = OxyColors.White
+                MarkerStroke = OxyColors.White,
              };
+            Series.Points.AddRange(temp);
 
             Model = new PlotModel { Title = "Loudness graph" };
             Model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled=false, IsPanEnabled=false });
@@ -112,7 +118,7 @@ namespace WS2812B_Android_Xamarin_App
 
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
-                //Recreate();
+                Series.Points.Clear();
             };
 
         }
