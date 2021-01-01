@@ -30,7 +30,7 @@ namespace WS2812B_Android_Xamarin_App
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            Toast.MakeText(this, "Alarm is set!", ToastLength.Long).Show();
+            //Toast.MakeText(this, "Alarm is set!", ToastLength.Long).Show();
 
             volumeRecordList = new List<VolumeRecord>();
             var bufferSize = AudioRecord.GetMinBufferSize(8000, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit);
@@ -62,6 +62,7 @@ namespace WS2812B_Android_Xamarin_App
                 {
                     int numBytes = audioRecord.Read(audioBuffer, 0, audioBuffer.Length);
 
+                    // calculate loudness from audio buffer
                     double sum = 0;
                     for (int i = 0; i < numBytes; i++)
                     {
@@ -70,8 +71,10 @@ namespace WS2812B_Android_Xamarin_App
                     var level = sum / numBytes;
                     var db = 20.0 * Math.Log10(level / 32767.0) + 90;
 
+                    // append loudness to list
                     volumeRecordList.Add(new VolumeRecord(db));
 
+                    // check loundess every second
                     Thread.Sleep(1000);
                 }
             });
@@ -90,6 +93,7 @@ namespace WS2812B_Android_Xamarin_App
 
                         double avg = sum / 50;
 
+                        // idea - establish level of "awake" from start of the sleep
                         // 55.8 is just arbitrary number, needs to be verified; TODO - check the datetime
                         if(avg >= 55.8)
                         {
@@ -97,6 +101,7 @@ namespace WS2812B_Android_Xamarin_App
                         }
                     }
 
+                    // sleep for 50 seconds
                     Thread.Sleep(50000);
                 }
             });
