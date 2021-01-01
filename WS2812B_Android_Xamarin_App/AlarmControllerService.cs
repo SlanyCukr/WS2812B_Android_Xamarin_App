@@ -20,7 +20,6 @@ namespace WS2812B_Android_Xamarin_App
     [Service]
     class AlarmControllerService : Service
     {
-        private List<VolumeRecord> volumeRecordList;
         private short[] audioBuffer = null;
         private AudioRecord audioRecord = null;
         private long start;
@@ -35,7 +34,6 @@ namespace WS2812B_Android_Xamarin_App
 
         private void SetupRecording()
         {
-            volumeRecordList = new List<VolumeRecord>();
             var bufferSize = AudioRecord.GetMinBufferSize(8000, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit);
             audioBuffer = new short[bufferSize];
             audioRecord = new AudioRecord(
@@ -56,7 +54,6 @@ namespace WS2812B_Android_Xamarin_App
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             start = DateTime.Now.Ticks;
-            //Toast.MakeText(this, "Alarm is set!", ToastLength.Long).Show();
 
             try
             {
@@ -90,7 +87,7 @@ namespace WS2812B_Android_Xamarin_App
                     var db = 20.0 * Math.Log10(level / 32767.0) + 90;
 
                     // append loudness to list
-                    AlarmClockActivity.AddPoint(new DataPoint(DateTime.Now.Ticks - start, db));
+                    AlarmClockActivity.AddPoint(new DataPoint((DateTime.Now.Ticks - start) / 10000000, db));
 
                     // check loundess every second
                     Thread.Sleep(1000);
@@ -100,7 +97,7 @@ namespace WS2812B_Android_Xamarin_App
 
             Thread2 = new Thread(() =>
             {
-                while (true)
+                /*while (true)
                 {
                     // check if on average user is in REM sleep and the time is right to wake him up
                     if (volumeRecordList.Count >= 50)
@@ -117,11 +114,11 @@ namespace WS2812B_Android_Xamarin_App
                         {
 
                         }
-                    }
+                    }*/
 
                     // sleep for 50 seconds
                     Thread.Sleep(50000);
-                }
+                //}
             });
             Thread2.Start();
         }
