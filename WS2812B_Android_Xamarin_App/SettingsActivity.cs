@@ -58,7 +58,6 @@ namespace WS2812B_Android_Xamarin_App
                             // found the server
                             if (response.Content.ReadAsStringAsync().Result == "Hello")
                             {
-                                serverIPAddress.Text = searchedIP;
                                 serverIPAddress.SetTextColor(Android.Graphics.Color.DarkGreen);
 
                                 Preferences.Set("serverIPAddress", searchedIP);
