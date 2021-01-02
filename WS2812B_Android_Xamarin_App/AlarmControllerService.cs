@@ -54,9 +54,11 @@ namespace WS2812B_Android_Xamarin_App
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
+            var alarm = Preferences.Get("wakeUpAt", new DateTime());
+
             var notification = new Notification.Builder(this)
             .SetContentTitle(Resources.GetString(Resource.String.app_name))
-            .SetContentText("Alarm clock")
+            .SetContentText(string.Format("Alarm will go off at: {0}.", alarm.ToString("HH:mm")))
             .SetSmallIcon(Resource.Drawable.abc_list_focused_holo)
             .SetOngoing(true)
             .Build();
