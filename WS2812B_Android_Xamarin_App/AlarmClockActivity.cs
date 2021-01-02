@@ -28,7 +28,7 @@ namespace WS2812B_Android_Xamarin_App
         private PlotView LoudnessGraph;
         private Button StopClockButton;
 
-        private Intent ControllerServiceIntent;
+        private static Intent ControllerServiceIntent;
 
         private static PlotModel Model { get; set; }
         public static LineSeries Series { get; set; }
@@ -58,9 +58,7 @@ namespace WS2812B_Android_Xamarin_App
             // setup graph
             Series = new LineSeries
             {
-                MarkerType = MarkerType.Circle,
-                MarkerSize = 2,
-                MarkerStroke = OxyColors.White,
+                MarkerSize = 0,
              };
             Series.Points.AddRange(temp);
 
@@ -79,6 +77,14 @@ namespace WS2812B_Android_Xamarin_App
 
             StartClockButton.Click += (sender, e) =>
             {
+                // only stop the service if it is running
+                if (ControllerServiceIntent != null)
+                {
+                    StopService(ControllerServiceIntent);
+                    ControllerServiceIntent = null;
+                    Series.Points.Clear();
+                }
+
                 // save current time for alarm clock
                 var now = DateTime.Now;
                 var alarm = new DateTime(now.Year, now.Month, now.Day, (int)PickTime.CurrentHour, (int)PickTime.CurrentMinute, 0);
@@ -109,12 +115,15 @@ namespace WS2812B_Android_Xamarin_App
                 ControllerServiceIntent = new Intent(this, typeof(AlarmControllerService));
                 StartForegroundService(ControllerServiceIntent);
             };
-
+             
             StopClockButton.Click += (sender, e) =>
             {
                 // only stop the service if it is running
-                if(ControllerServiceIntent != null)
+                if (ControllerServiceIntent != null)
+                {
                     StopService(ControllerServiceIntent);
+                    ControllerServiceIntent = null;
+                }
 
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
