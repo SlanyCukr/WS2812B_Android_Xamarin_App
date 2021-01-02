@@ -23,6 +23,7 @@ namespace WS2812B_Android_Xamarin_App
         private short[] audioBuffer = null;
         private AudioRecord audioRecord = null;
         private long start;
+        private double awakeLoudness;
 
         private Thread Thread1 { get; set; }
         private Thread Thread2 { get; set; }
@@ -53,8 +54,16 @@ namespace WS2812B_Android_Xamarin_App
 
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            start = DateTime.Now.Ticks;
+            var notification = new Notification.Builder(this)
+            .SetContentTitle(Resources.GetString(Resource.String.app_name))
+            .SetContentText("Alarm clock")
+            .SetSmallIcon(Resource.Drawable.abc_list_focused_holo)
+            .SetOngoing(true)
+            .Build();
 
+            start = DateTime.Now.Ticks;
+            awakeLoudness = 10000;
+            
             try
             {
                 SetupRecording();
@@ -66,11 +75,13 @@ namespace WS2812B_Android_Xamarin_App
             }
             MainLoop();
 
+            StartForeground(10000, notification);
             return StartCommandResult.Sticky;
         }
 
         public void MainLoop()
         {
+            // read loudness
             Thread1 = new Thread(() =>
             {
                 while (true)
@@ -89,36 +100,55 @@ namespace WS2812B_Android_Xamarin_App
                     // append loudness to list
                     AlarmClockActivity.AddPoint(new DataPoint((DateTime.Now.Ticks - start) / 10000000, db));
 
-                    // check loundess every second
+                    // check loudness every second
                     Thread.Sleep(1000);
                 }
             });
             Thread1.Start();
 
+            // waking up
             Thread2 = new Thread(() =>
             {
-                /*while (true)
+                while (true)
                 {
+                    // check if we already calculated awake loudness
+                    if(awakeLoudness == 10000)
+                    {
+                        // check if we have enough information to calcute it
+                        if(AlarmClockActivity.Series.Points.Count >= 600)
+                        {
+                            // calculate it
+                            double sum = 0;
+                            for (int i = 0; i < 600; i++)
+                                sum += AlarmClockActivity.Series.Points[i].Y;
+
+                            awakeLoudness = sum / 600;
+                        }
+                    }
+
                     // check if on average user is in REM sleep and the time is right to wake him up
-                    if (volumeRecordList.Count >= 50)
+                    if (AlarmClockActivity.Series.Points.Count >= 50)
                     {
                         double sum = 0;
-                        for (int i = volumeRecordList.Count - 50; i < volumeRecordList.Count; i++)
-                            sum += volumeRecordList[i].Loudness;
+                        for (int i = AlarmClockActivity.Series.Points.Count - 50; i < AlarmClockActivity.Series.Points.Count; i++)
+                            sum += AlarmClockActivity.Series.Points[i].Y;
 
                         double avg = sum / 50;
 
-                        // idea - establish level of "awake" from start of the sleep
-                        // 55.8 is just arbitrary number, needs to be verified; TODO - check the datetime
-                        if(avg >= 55.8)
+                        // if its the right time to be awaken and person is in REM, wake him up
+                        var test = Preferences.Get("wakeUpAt", new DateTime());
+                        var result = Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes);
+                        if (avg >= awakeLoudness && (Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes) <= 30))
                         {
-
+                            // turn on the LED stripe, stop adding data to graph
+                            ControlCenterActivity.TurnOn();
+                            StopSelf();
                         }
-                    }*/
+                    }
 
                     // sleep for 50 seconds
                     Thread.Sleep(50000);
-                //}
+                }
             });
             Thread2.Start();
         }

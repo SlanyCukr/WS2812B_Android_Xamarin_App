@@ -28,10 +28,9 @@ namespace WS2812B_Android_Xamarin_App
             Button turnOffButton = FindViewById<Button>(Resource.Id.TurnOffButton);
             Button rainbowButton = FindViewById<Button>(Resource.Id.RainbowButton);
 
-            turnOnButton.Click += async (sender, e) =>
+            turnOnButton.Click += (sender, e) =>
             {
-                var client = new HttpClient();
-                await client.PostAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
+                TurnOn();
             };
             turnOffButton.Click += async (sender, e) =>
             {
@@ -43,6 +42,12 @@ namespace WS2812B_Android_Xamarin_App
                 var client = new HttpClient();
                 client.PostAsync(string.Format("http://{0}:5000/rainbow", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
             };
+        }
+
+        public static void TurnOn()
+        {
+            var client = new HttpClient();
+            client.PostAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
         }
     }
 }

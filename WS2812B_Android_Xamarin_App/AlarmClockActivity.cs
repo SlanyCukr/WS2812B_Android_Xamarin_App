@@ -28,10 +28,10 @@ namespace WS2812B_Android_Xamarin_App
         private PlotView LoudnessGraph;
         private Button StopClockButton;
 
-        private Intent Intent;
+        private Intent ControllerServiceIntent;
 
         private static PlotModel Model { get; set; }
-        private static LineSeries Series { get; set; }
+        public static LineSeries Series { get; set; }
 
         public static void AddPoint(DataPoint point)
         {
@@ -64,7 +64,7 @@ namespace WS2812B_Android_Xamarin_App
              };
             Series.Points.AddRange(temp);
 
-            Model = new PlotModel { Title = "Loudness graph" };
+            Model = new PlotModel { Title = "Sleep graph" };
             Model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled=false, IsPanEnabled=false });
             Model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Maximum = 100, Minimum = 10, IsZoomEnabled=false, IsPanEnabled=false });
             Model.Series.Add(Series);
@@ -106,21 +106,20 @@ namespace WS2812B_Android_Xamarin_App
                     RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, 0);
                 }
 
-                Intent = new Intent(this, typeof(AlarmControllerService));
-                StartService(Intent);
+                ControllerServiceIntent = new Intent(this, typeof(AlarmControllerService));
+                StartForegroundService(ControllerServiceIntent);
             };
 
             StopClockButton.Click += (sender, e) =>
             {
                 // only stop the service if it is running
-                if(Intent != null)
-                    StopService(Intent);
+                if(ControllerServiceIntent != null)
+                    StopService(ControllerServiceIntent);
 
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
                 Series.Points.Clear();
             };
-
         }
 
         private void HandleVisibility()
