@@ -18,10 +18,14 @@ namespace WS2812B_Android_Xamarin_App
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
+            // set brightness of led to stored value
+            LedAPI.SetBrightness(Preferences.Get("ledBrightness", 64));
+
             Button controlCenterButton = FindViewById<Button>(Resource.Id.ControlCenterButton);
             Button alarmClockButton = FindViewById<Button>(Resource.Id.AlarmClockButton);
             Button settingsButton = FindViewById<Button>(Resource.Id.SettingsButton);
 
+            // create new activities from menu
             controlCenterButton.Click += (sender, e) =>
             {
                 StartActivity(typeof(ControlCenterActivity));
@@ -42,6 +46,11 @@ namespace WS2812B_Android_Xamarin_App
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
         }
     }
 }

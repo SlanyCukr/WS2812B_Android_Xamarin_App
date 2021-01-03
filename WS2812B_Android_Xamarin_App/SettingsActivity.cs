@@ -35,7 +35,11 @@ namespace WS2812B_Android_Xamarin_App
             {
                 serverIPAddress.Text = Preferences.Get("serverIPAddress", "");
             }
-           
+
+            // handle brightness settings
+            var brightness = Preferences.Get("ledBrightness", 64);
+            seekBar.Progress = brightness;
+
             findServerButton.Click += async (sender, e) =>
             {
                 serverIPAddress.SetTextColor(Android.Graphics.Color.Red);
@@ -72,7 +76,10 @@ namespace WS2812B_Android_Xamarin_App
             };
             setBrightnessButton.Click += (sender, e) =>
             {
-                LedAPI.SetBrightness(seekBar.Progress);
+                var brightness = seekBar.Progress;
+
+                Preferences.Set("ledBrightness", brightness);
+                LedAPI.SetBrightness(brightness);
             };
         }
     }

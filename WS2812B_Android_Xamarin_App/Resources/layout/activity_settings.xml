@@ -50,8 +50,9 @@
         android:layout_marginTop="25px"
         android:id="@+id/SeekBar"
         android:layout_centerHorizontal="true"
+        android:min="1"
         android:max="255" 
-        android:progress="100"/>
+        android:progress="64"/>
     <Button
         android:text="Set brightness"
         android:layout_width="150.0dp"
