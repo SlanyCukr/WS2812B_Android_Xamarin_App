@@ -27,6 +27,8 @@ namespace WS2812B_Android_Xamarin_App
             // Create your application here
             Button findServerButton = FindViewById<Button>(Resource.Id.FindServerButton);
             EditText serverIPAddress = FindViewById<EditText>(Resource.Id.ServerIPAddress);
+            SeekBar seekBar = FindViewById<SeekBar>(Resource.Id.SeekBar);
+            Button setBrightnessButton = FindViewById<Button>(Resource.Id.SetBrightnessButton);
 
             // find saved serverIPAddress in settings
             if (Preferences.ContainsKey("serverIPAddress"))
@@ -69,6 +71,10 @@ namespace WS2812B_Android_Xamarin_App
                         }
                     }
                 }
+            };
+            setBrightnessButton.Click += (sender, e) =>
+            {
+                LedAPI.SetBrightness(seekBar.Progress);
             };
         }
     }

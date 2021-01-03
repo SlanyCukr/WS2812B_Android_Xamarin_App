@@ -83,6 +83,8 @@ namespace WS2812B_Android_Xamarin_App
 
         public void MainLoop()
         {
+            /// TODO -> Create function that will create the threads; or just function that the threads will use
+
             // read loudness
             Thread1 = new Thread(() =>
             {
@@ -138,12 +140,10 @@ namespace WS2812B_Android_Xamarin_App
                         double avg = sum / 50;
 
                         // if its the right time to be awaken and person is in REM, wake him up
-                        var test = Preferences.Get("wakeUpAt", new DateTime());
-                        var result = Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes);
-                        if (avg >= awakeLoudness && (Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes) <= 30))
+                        if (IsInREM(avg) && IsTimeToWakeUp())
                         {
                             // turn on the LED stripe, stop adding data to graph
-                            ControlCenterActivity.TurnOn();
+                            LedAPI.TurnOn();
                             StopSelf();
                         }
                     }
@@ -153,6 +153,20 @@ namespace WS2812B_Android_Xamarin_App
                 }
             });
             Thread2.Start();
+        }
+
+        private bool IsInREM(double avgLoudness)
+        {
+            if (Math.Abs(awakeLoudness - avgLoudness) <= 3)
+                return true;
+            return false;
+        }
+
+        private bool IsTimeToWakeUp()
+        {
+            if(Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes) <= 30)
+                    return true;
+            return false;
         }
 
         public override void OnDestroy()

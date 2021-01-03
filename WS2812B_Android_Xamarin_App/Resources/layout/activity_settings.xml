@@ -31,4 +31,33 @@
         android:layout_marginTop="25px"
         android:id="@+id/FindServerButton"
         android:layout_centerHorizontal="true"/>
+    <TextView
+        android:text="Brightness"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_marginTop="25px"
+        android:id="@+id/BrightnessTextView"
+        android:layout_below="@id/FindServerButton"
+        android:layout_centerHorizontal="true"/>
+    <SeekBar
+        android:text="Find server"
+        android:layout_width="150.0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/BrightnessTextView"
+        android:layout_marginTop="25px"
+        android:id="@+id/SeekBar"
+        android:layout_centerHorizontal="true"
+        android:max="255" 
+        android:progress="100"/>
+    <Button
+        android:text="Set brightness"
+        android:layout_width="150.0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/SeekBar"
+        android:layout_marginTop="25px"
+        android:id="@+id/SetBrightnessButton"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

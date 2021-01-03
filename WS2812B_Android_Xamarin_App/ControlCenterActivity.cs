@@ -30,24 +30,16 @@ namespace WS2812B_Android_Xamarin_App
 
             turnOnButton.Click += (sender, e) =>
             {
-                TurnOn();
+                LedAPI.TurnOn();
             };
             turnOffButton.Click += async (sender, e) =>
             {
-                var client = new HttpClient();
-                await client.PostAsync(string.Format("http://{0}:5000/turn_off", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
+                LedAPI.TurnOff();
             };
             rainbowButton.Click += (sender, e) =>
             {
-                var client = new HttpClient();
-                client.PostAsync(string.Format("http://{0}:5000/rainbow", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
+                LedAPI.Rainbow();
             };
-        }
-
-        public static void TurnOn()
-        {
-            var client = new HttpClient();
-            client.PostAsync(string.Format("http://{0}:5000/turn_on", Preferences.Get("serverIPAddress", "192.168.0.114")), null);
         }
     }
 }
