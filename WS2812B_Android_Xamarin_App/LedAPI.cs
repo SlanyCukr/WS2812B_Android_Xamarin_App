@@ -16,7 +16,8 @@ namespace WS2812B_Android_Xamarin_App
 {
     static class LedAPI
     {
-        private static HttpClient Client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
+        private static readonly HttpClient HelloClient = new HttpClient { Timeout=TimeSpan.FromMilliseconds(400) };
 
         public async static Task<HttpResponseMessage> TurnOn()
         {
@@ -38,6 +39,11 @@ namespace WS2812B_Android_Xamarin_App
         {
             var encodedValues = new FormUrlEncodedContent(new Dictionary<string, string> { { "brightness", brightness.ToString()} });
             return await Client.PostAsync(string.Format("http://{0}:5000/set_brightness", Preferences.Get("serverIPAddress", "192.168.0.114")), encodedValues);
+        }
+
+        public async static Task<HttpResponseMessage> Hello(string ip)
+        {
+            return await HelloClient.GetAsync("http://" + ip + ":5000/hello");
         }
     }
 }

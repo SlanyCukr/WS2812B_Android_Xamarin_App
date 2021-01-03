@@ -44,9 +44,6 @@ namespace WS2812B_Android_Xamarin_App
 
                 if (myIPAddress != null)
                 {
-                    var client = new HttpClient();
-                    client.Timeout = TimeSpan.FromMilliseconds(200);
-
                     string strIP = myIPAddress.ToString();
                     for(int i = 1; i < 255; i++)
                     {
@@ -55,7 +52,8 @@ namespace WS2812B_Android_Xamarin_App
                         {
                             string searchedIP = string.Format("{0}.{1}.{2}.{3}", splitted[0], splitted[1], splitted[2], i);
                             serverIPAddress.Text = searchedIP;
-                            var response = await client.GetAsync("http://" + searchedIP + ":5000/hello");
+
+                            var response = await LedAPI.Hello(searchedIP);
 
                             // found the server
                             if (response.Content.ReadAsStringAsync().Result == "Hello")
