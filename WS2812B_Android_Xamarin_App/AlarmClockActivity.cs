@@ -32,11 +32,29 @@ namespace WS2812B_Android_Xamarin_App
 
         private static PlotModel Model { get; set; }
         public static LineSeries Series { get; set; }
+        private static List<double> Points { get; set; }
 
-        public static void AddPoint(DataPoint point)
+        public static void AddPoint(double loudness, long start)
         {
-            Series.Points.Add(point);
-            Model.InvalidatePlot(true);
+            Points.Add(loudness);
+
+            // update graph if we have enough points
+            if (Points.Count >= 100)
+            {
+                // calculating moving average
+                double sumMA = 0;
+
+                int indexInPast = Points.Count - 100;
+                for (int i = Points.Count - 1; i >= indexInPast; i--)
+                    sumMA += Points[i];
+            
+                double MA = sumMA / 100;
+
+                var point = new DataPoint(((DateTime.Now.Ticks - start) / 10000000) - 100, MA);
+
+                Series.Points.Add(point);
+                Model.InvalidatePlot(true);
+            }
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -44,16 +62,18 @@ namespace WS2812B_Android_Xamarin_App
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.activity_alarm_clock);
-            
+
             StartClockButton = FindViewById<Button>(Resource.Id.StartClockButton);
             PickTime = FindViewById<TimePicker>(Resource.Id.PickTime);
             LoudnessGraph = FindViewById<PlotView>(Resource.Id.LoudnessGraph);
             StopClockButton = FindViewById<Button>(Resource.Id.StopClockButton);
 
-            // try to gain access to persisted data points
+            // try to gain access to stored data points
             List<DataPoint> temp = new List<DataPoint>();
             if(Series != null)
                 temp = Series.Points;
+            if (Points == null)
+                Points = new List<double>();
 
             // setup graph
             Series = new LineSeries
@@ -64,7 +84,7 @@ namespace WS2812B_Android_Xamarin_App
 
             Model = new PlotModel { Title = "Sleep graph" };
             Model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled=false, IsPanEnabled=false });
-            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Maximum = 100, Minimum = 10, IsZoomEnabled=false, IsPanEnabled=false });
+            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, IsZoomEnabled=false, IsPanEnabled=false });
             Model.Series.Add(Series);
             LoudnessGraph.Model = Model;
         

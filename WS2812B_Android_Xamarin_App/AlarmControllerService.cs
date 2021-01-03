@@ -101,8 +101,8 @@ namespace WS2812B_Android_Xamarin_App
                     var level = sum / numBytes;
                     var db = 20.0 * Math.Log10(level / 32767.0) + 90;
 
-                    // append loudness to list
-                    AlarmClockActivity.AddPoint(new DataPoint((DateTime.Now.Ticks - start) / 10000000, db));
+                    // add the point
+                    AlarmClockActivity.AddPoint(db, start);
 
                     // check loudness every second
                     Thread.Sleep(1000);
