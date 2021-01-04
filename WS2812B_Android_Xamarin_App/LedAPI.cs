@@ -37,8 +37,17 @@ namespace WS2812B_Android_Xamarin_App
 
         public async static Task<HttpResponseMessage> SetBrightness(int brightness)
         {
-            var encodedValues = new FormUrlEncodedContent(new Dictionary<string, string> { { "brightness", brightness.ToString()} });
+            var encodedValues = new FormUrlEncodedContent(new Dictionary<string, string> { { "brightness", brightness.ToString() } });
             return await Client.PostAsync(string.Format("http://{0}:5000/set_brightness", Preferences.Get("serverIPAddress", "192.168.0.114")), encodedValues);
+        }
+        public async static Task<HttpResponseMessage> Log(List<double> valuesList)
+        {
+            string text = "";
+            foreach (var l in valuesList)
+                text += l.ToString() + '\n';
+
+            var encodedValues = new FormUrlEncodedContent(new Dictionary<string, string> { { "value", text } });
+            return await Client.PostAsync(string.Format("http://{0}:5000/log", Preferences.Get("serverIPAddress", "192.168.0.114")), encodedValues);
         }
 
         public async static Task<HttpResponseMessage> Hello(string ip)

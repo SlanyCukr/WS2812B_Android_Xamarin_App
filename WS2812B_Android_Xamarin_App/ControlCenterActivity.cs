@@ -28,17 +28,17 @@ namespace WS2812B_Android_Xamarin_App
             Button turnOffButton = FindViewById<Button>(Resource.Id.TurnOffButton);
             Button rainbowButton = FindViewById<Button>(Resource.Id.RainbowButton);
 
-            turnOnButton.Click += (sender, e) =>
+            turnOnButton.Click += async (sender, e) =>
             {
-                LedAPI.TurnOn();
+                var result = await LedAPI.TurnOn();
             };
             turnOffButton.Click += async (sender, e) =>
             {
-                LedAPI.TurnOff();
+                var result = await LedAPI.TurnOff();
             };
-            rainbowButton.Click += (sender, e) =>
+            rainbowButton.Click += async (sender, e) =>
             {
-                LedAPI.Rainbow();
+                var result = await LedAPI.Rainbow();
             };
         }
     }

@@ -13,6 +13,7 @@ using OxyPlot.Series;
 using OxyPlot.Xamarin.Android;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -27,9 +28,11 @@ namespace WS2812B_Android_Xamarin_App
         private TimePicker PickTime;
         private PlotView LoudnessGraph;
         private Button StopClockButton;
+        AlertDialog.Builder Builder { get; set; }
+        AlertDialog AlertDialog { get; set; }
 
         private static Intent ControllerServiceIntent;
-
+        private static AlarmClockActivity Instance;
         private static PlotModel Model { get; set; }
         public static LineSeries Series { get; set; }
         private static List<double> Points { get; set; }
@@ -41,6 +44,8 @@ namespace WS2812B_Android_Xamarin_App
             // update graph if we have enough points
             if (Points.Count >= 100)
             {
+                Instance.SetDialog(false);
+
                 // calculating moving average
                 double sumMA = 0;
 
@@ -61,7 +66,12 @@ namespace WS2812B_Android_Xamarin_App
         {
             base.OnCreate(savedInstanceState);
 
+            Instance = this;
+
             SetContentView(Resource.Layout.activity_alarm_clock);
+
+            Builder = new AlertDialog.Builder(this);
+            Builder.SetView(Resource.Layout.progress_chart);
 
             StartClockButton = FindViewById<Button>(Resource.Id.StartClockButton);
             PickTime = FindViewById<TimePicker>(Resource.Id.PickTime);
@@ -134,9 +144,11 @@ namespace WS2812B_Android_Xamarin_App
 
                 ControllerServiceIntent = new Intent(this, typeof(AlarmControllerService));
                 StartForegroundService(ControllerServiceIntent);
+
+                SetDialog(true);
             };
              
-            StopClockButton.Click += (sender, e) =>
+            StopClockButton.Click += async (sender, e) =>
             {
                 // only stop the service if it is running
                 if (ControllerServiceIntent != null)
@@ -145,9 +157,13 @@ namespace WS2812B_Android_Xamarin_App
                     ControllerServiceIntent = null;
                 }
 
+                // only for developing purposes - to play around with data in external application
+                await LedAPI.Log(Points);
+
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
                 Series.Points.Clear();
+                Points.Clear();
             };
         }
 
@@ -169,6 +185,16 @@ namespace WS2812B_Android_Xamarin_App
                 LoudnessGraph.Visibility = ViewStates.Gone;
                 StopClockButton.Visibility = ViewStates.Gone;
             }
+        }
+
+        private void SetDialog(bool show)
+        {
+            if (AlertDialog == null)
+                AlertDialog = Builder.Create();
+            if (show)
+                AlertDialog.Show();
+            else
+                AlertDialog.Dismiss();
         }
     }
 }
