@@ -30,15 +30,12 @@ namespace WS2812B_Android_Xamarin_App
         private Button StopClockButton;
 
         private static Intent ControllerServiceIntent;
-        private static AlarmClockActivity Instance;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             Preferences.Set("MOVING_AVERAGE_PERIOD", 100);
-
-            Instance = this;
 
             SetContentView(Resource.Layout.activity_alarm_clock);
 
