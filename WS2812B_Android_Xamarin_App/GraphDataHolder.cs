@@ -91,5 +91,11 @@ namespace WS2812B_Android_Xamarin_App
         {
             return Points.ToArray();
         }
+
+        public void ResetData()
+        {
+            Points.Clear();
+            DataPoints.Clear();
+        }
     }
 }

@@ -83,6 +83,9 @@ namespace WS2812B_Android_Xamarin_App
 
         public void MainLoop()
         {
+            // reset data in data graph handler
+            GraphDataHolder.Instance.ResetData();
+
             /// TODO -> Create function that will create the threads; or just function that the threads will use
 
             // read loudness
