@@ -27,39 +27,10 @@ namespace WS2812B_Android_Xamarin_App
         private Button StartClockButton;
         private TextView SleepTextView;
         private TimePicker PickTime;
-        private PlotView LoudnessGraph;
         private Button StopClockButton;
 
         private static Intent ControllerServiceIntent;
         private static AlarmClockActivity Instance;
-        private static PlotModel Model { get; set; }
-        public static LineSeries Series { get; set; }
-        private static List<double> Points { get; set; }
-
-        public static void AddPoint(double loudness, long start)
-        {
-            Points.Add(loudness);
-
-            int movingAveragePeriod = Preferences.Get("MOVING_AVERAGE_PERIOD", 5000);
-
-            // update graph if we have enough points
-            if (Points.Count >= movingAveragePeriod)
-            {
-                // calculating moving average
-                double sumMA = 0;
-
-                int indexInPast = Points.Count - movingAveragePeriod;
-                for (int i = Points.Count - 1; i >= indexInPast; i--)
-                    sumMA += Points[i];
-            
-                double MA = sumMA / movingAveragePeriod;
-
-                var point = new DataPoint(((DateTime.Now.Ticks - start) / 10000000) - movingAveragePeriod, MA);
-
-                Series.Points.Add(point);
-                //Model.InvalidatePlot(true);
-            }
-        }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -74,29 +45,8 @@ namespace WS2812B_Android_Xamarin_App
             StartClockButton = FindViewById<Button>(Resource.Id.StartClockButton);
             SleepTextView = FindViewById<TextView>(Resource.Id.SleepTextView);
             PickTime = FindViewById<TimePicker>(Resource.Id.PickTime);
-            // LoudnessGraph = FindViewById<PlotView>(Resource.Id.LoudnessGraph);
             StopClockButton = FindViewById<Button>(Resource.Id.StopClockButton);
 
-            // try to gain access to stored data points
-            List<DataPoint> temp = new List<DataPoint>();
-            if(Series != null)
-                temp = Series.Points;
-            if (Points == null)
-                Points = new List<double>();
-
-            // setup graph
-            Series = new LineSeries
-            {
-                MarkerSize = 0,
-             };
-            Series.Points.AddRange(temp);
-
-            Model = new PlotModel { Title = "Sleep graph" };
-            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled=false, IsPanEnabled=false });
-            Model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, IsZoomEnabled=false, IsPanEnabled=false });
-            Model.Series.Add(Series);
-            LoudnessGraph.Model = Model;
-        
             // set visibility of startClockButton and pickTime
             HandleVisibility();
 
@@ -111,7 +61,6 @@ namespace WS2812B_Android_Xamarin_App
                 {
                     StopService(ControllerServiceIntent);
                     ControllerServiceIntent = null;
-                    Series.Points.Clear();
                 }
 
                 // save current time for alarm clock
@@ -157,12 +106,8 @@ namespace WS2812B_Android_Xamarin_App
                 // only for developing purposes - to play around with data in external application
                 // await LedAPI.Log(Points);
 
-                LoudnessGraph.Visibility = ViewStates.Visible;
-
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
-                //Series.Points.Clear();
-                //Points.Clear();
             };
         }
 
@@ -174,7 +119,6 @@ namespace WS2812B_Android_Xamarin_App
                 PickTime.Visibility = ViewStates.Gone;
 
                 SleepTextView.Visibility = ViewStates.Visible;
-                LoudnessGraph.Visibility = ViewStates.Gone;
                 StopClockButton.Visibility = ViewStates.Visible;
             }
             else
@@ -184,10 +128,6 @@ namespace WS2812B_Android_Xamarin_App
 
                 SleepTextView.Visibility = ViewStates.Gone;
                 StopClockButton.Visibility = ViewStates.Gone;
-
-                // check if we should display loudness graph
-                if(Points.Count >= Preferences.Get("MOVING_AVERAGE_PERIOD", 5000))
-                    LoudnessGraph.Visibility = ViewStates.Visible;
             }
         }
     }
