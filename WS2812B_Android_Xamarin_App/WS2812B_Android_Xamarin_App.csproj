@@ -69,6 +69,7 @@
     <Compile Include="AlarmClockActivity.cs" />
     <Compile Include="AlarmControllerService.cs" />
     <Compile Include="ControlCenterActivity.cs" />
+    <Compile Include="GraphDataHolder.cs" />
     <Compile Include="LedAPI.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -81,5 +81,15 @@ namespace WS2812B_Android_Xamarin_App
                 DataPoints.Add(point);
             }
         }
+
+        public int GetPointsCount()
+        {
+            return Points.Count;
+        }
+
+        public double[] GetPointsAsArr()
+        {
+            return Points.ToArray();
+        }
     }
 }

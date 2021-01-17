@@ -102,7 +102,7 @@ namespace WS2812B_Android_Xamarin_App
                     var db = 20.0 * Math.Log10(level / 32767.0) + 90;
 
                     // add the point
-                    AlarmClockActivity.AddPoint(db, start);
+                    GraphDataHolder.Instance.AddPoint(db, start);
 
                     // check loudness every second
                     Thread.Sleep(1000);
@@ -113,31 +113,36 @@ namespace WS2812B_Android_Xamarin_App
             // waking up
             Thread2 = new Thread(() =>
             {
+                int movingAveragePeriod = Preferences.Get("MOVING_AVERAGE_PERIOD", 5000);
+
                 while (true)
                 {
+                    var pointsCount = GraphDataHolder.Instance.GetPointsCount();
+                    var pointsAsArr = GraphDataHolder.Instance.GetPointsAsArr();
+
                     // check if we already calculated awake loudness
-                    if(awakeLoudness == 10000)
+                    if (awakeLoudness == 10000)
                     {
                         // check if we have enough information to calcute it
-                        if(AlarmClockActivity.Series.Points.Count >= 600)
+                        if(pointsCount >= movingAveragePeriod)
                         {
                             // calculate it
                             double sum = 0;
-                            for (int i = 0; i < 600; i++)
-                                sum += AlarmClockActivity.Series.Points[i].Y;
+                            for (int i = 0; i < movingAveragePeriod; i++)
+                                sum += pointsAsArr[i];
 
-                            awakeLoudness = sum / 600;
+                            awakeLoudness = sum / movingAveragePeriod;
                         }
                     }
 
                     // check if on average user is in REM sleep and the time is right to wake him up
-                    if (AlarmClockActivity.Series.Points.Count >= 50)
+                    if (pointsCount >= movingAveragePeriod)
                     {
                         double sum = 0;
-                        for (int i = AlarmClockActivity.Series.Points.Count - 50; i < AlarmClockActivity.Series.Points.Count; i++)
-                            sum += AlarmClockActivity.Series.Points[i].Y;
+                        for (int i = pointsCount - movingAveragePeriod; i < pointsCount; i++)
+                            sum += pointsAsArr[i];
 
-                        double avg = sum / 50;
+                        double avg = sum / movingAveragePeriod;
 
                         // if its the right time to be awaken and person is in REM, wake him up
                         if (IsInREM(avg) && IsTimeToWakeUp())
@@ -155,6 +160,11 @@ namespace WS2812B_Android_Xamarin_App
             Thread2.Start();
         }
 
+        /// <summary>
+        /// If the loudness difference between "awake" state and most current state is low, we say that the subject is in REM.
+        /// </summary>
+        /// <param name="avgLoudness">Calculated current average loudness</param>
+        /// <returns>Boolean</returns>
         private bool IsInREM(double avgLoudness)
         {
             if (Math.Abs(awakeLoudness - avgLoudness) <= 3)
@@ -162,6 +172,10 @@ namespace WS2812B_Android_Xamarin_App
             return false;
         }
 
+        /// <summary>
+        /// Calculates if it's time for the subject to be awoken.
+        /// </summary>
+        /// <returns>Boolean</returns>
         private bool IsTimeToWakeUp()
         {
             if(Math.Abs((DateTime.Now - Preferences.Get("wakeUpAt", new DateTime())).TotalMinutes) <= 30)
