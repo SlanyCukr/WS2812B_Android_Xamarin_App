@@ -18,6 +18,8 @@ namespace WS2812B_Android_Xamarin_App
     [Activity(Label = "SettingsActivity")]
     public class SettingsActivity : Activity
     {
+        private AlertDialog.Builder Builder;
+        private AlertDialog AlertDialog;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,11 +32,11 @@ namespace WS2812B_Android_Xamarin_App
             SeekBar seekBar = FindViewById<SeekBar>(Resource.Id.SeekBar);
             Button setBrightnessButton = FindViewById<Button>(Resource.Id.SetBrightnessButton);
 
+            Builder = new AlertDialog.Builder(this);
+            Builder.SetView(Resource.Layout.progress_led_server);
+
             // find saved serverIPAddress in settings
-            if (Preferences.ContainsKey("serverIPAddress"))
-            {
-                serverIPAddress.Text = Preferences.Get("serverIPAddress", "");
-            }
+            serverIPAddress.Text = Preferences.Get("serverIPAddress", "");
 
             // handle brightness settings
             var brightness = Preferences.Get("ledBrightness", 64);
@@ -42,6 +44,8 @@ namespace WS2812B_Android_Xamarin_App
 
             findServerButton.Click += async (sender, e) =>
             {
+                SetDialog(true);
+
                 serverIPAddress.SetTextColor(Android.Graphics.Color.Red);
 
                 var myIPAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault();
@@ -70,10 +74,14 @@ namespace WS2812B_Android_Xamarin_App
                         }
                         catch(Exception)
                         {
+                            continue;
                         }
                     }
                 }
+
+                SetDialog(false);
             };
+
             setBrightnessButton.Click += (sender, e) =>
             {
                 var brightness = seekBar.Progress;
@@ -81,6 +89,16 @@ namespace WS2812B_Android_Xamarin_App
                 Preferences.Set("ledBrightness", brightness);
                 LedAPI.SetBrightness(brightness);
             };
+        }
+
+        private void SetDialog(bool show)
+        {
+            if (AlertDialog == null)
+                AlertDialog = Builder.Create();
+            if (show)
+                AlertDialog.Show();
+            else
+                AlertDialog.Dismiss();
         }
     }
 }

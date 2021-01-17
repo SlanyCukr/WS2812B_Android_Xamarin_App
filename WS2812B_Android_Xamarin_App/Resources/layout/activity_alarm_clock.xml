@@ -10,6 +10,16 @@
         android:minHeight="25px"
         android:id="@+id/PickTime">
     </TimePicker>
+    <TextView
+        android:text="Sleep well friend"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_marginTop="25px"
+        android:id="@+id/SleepTextView"
+        android:layout_centerHorizontal="true" />
     <Button
         android:text="Start clock"
         android:layout_width="wrap_content"
@@ -18,12 +28,6 @@
         android:layout_marginTop="25px"
         android:id="@+id/StartClockButton"
         android:layout_centerHorizontal="true" />
-    <OxyPlot.Xamarin.Android.PlotView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/LoudnessGraph"
-        android:layout_marginBottom="50dp"
-        android:visibility="gone"/>
     <Button
         android:text="Stop clock"
         android:layout_width="wrap_content"

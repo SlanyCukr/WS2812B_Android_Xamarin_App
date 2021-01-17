@@ -138,12 +138,12 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\progress_led.xml">
+    <AndroidResource Include="Resources\layout\progress_led_server.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\progress_chart.xml">
+    <AndroidResource Include="Resources\layout\activity_graph.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
