@@ -100,6 +100,9 @@ namespace WS2812B_Android_Xamarin_App
                     ControllerServiceIntent = null;
                 }
 
+                // Go to LoudnessGraph activity
+                StartActivity(typeof(LoudnessGraphActivity));
+
                 // only for developing purposes - to play around with data in external application
                 // await LedAPI.Log(Points);
 

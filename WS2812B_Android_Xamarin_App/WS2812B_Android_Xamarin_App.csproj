@@ -71,6 +71,7 @@
     <Compile Include="ControlCenterActivity.cs" />
     <Compile Include="GraphDataHolder.cs" />
     <Compile Include="LedAPI.cs" />
+    <Compile Include="LoudnessGraphActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
