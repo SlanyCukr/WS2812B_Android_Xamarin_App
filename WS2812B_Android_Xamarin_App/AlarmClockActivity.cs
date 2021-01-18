@@ -111,35 +111,10 @@ namespace WS2812B_Android_Xamarin_App
                         SleepImageView3.Visibility = ViewStates.Visible;
                     });
 
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    while (true)
                     {
-                        SleepImageView1.Animate().Alpha(1.0f).SetDuration(5000).Start();
-                    });
-                    Thread.Sleep(5000);
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        SleepImageView1.Animate().Alpha(0.0f).SetDuration(5000).Start();
-                    });
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        SleepImageView2.Animate().Alpha(1.0f).SetDuration(5000).Start();
-                    });
-                    Thread.Sleep(5000);
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        SleepImageView2.Animate().Alpha(0.0f).SetDuration(5000).Start();
-                    });
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        SleepImageView3.Animate().Alpha(1.0f).SetDuration(5000).Start();
-                    });
-                    Thread.Sleep(5000);
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        SleepImageView3.Animate().Alpha(0.0f).SetDuration(5000).Start();
-                    });
+                        OneSleepAnimation();
+                    }
                 });
                 sleepingAnimation.Start();
             };
@@ -164,6 +139,38 @@ namespace WS2812B_Android_Xamarin_App
             };
         }
 
+        private void OneSleepAnimation()
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView1.Animate().Alpha(1.0f).SetDuration(5000).Start();
+            });
+            Thread.Sleep(5000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView1.Animate().Alpha(0.0f).SetDuration(5000).Start();
+            });
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView2.Animate().Alpha(1.0f).SetDuration(5000).Start();
+            });
+            Thread.Sleep(5000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView2.Animate().Alpha(0.0f).SetDuration(5000).Start();
+            });
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView3.Animate().Alpha(1.0f).SetDuration(5000).Start();
+            });
+            Thread.Sleep(5000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                SleepImageView3.Animate().Alpha(0.0f).SetDuration(5000).Start();
+            });
+        }
         private void HandleVisibility()
         {
             if (Preferences.ContainsKey("wakeUpAt"))

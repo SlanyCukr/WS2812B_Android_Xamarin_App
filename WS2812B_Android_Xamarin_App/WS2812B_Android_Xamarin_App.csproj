@@ -150,9 +150,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\anim\fade_in.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\kirin_tor.jpg" />
   </ItemGroup>
   <ItemGroup>
