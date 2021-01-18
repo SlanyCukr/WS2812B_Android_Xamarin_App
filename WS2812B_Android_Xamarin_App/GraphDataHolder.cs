@@ -92,6 +92,11 @@ namespace WS2812B_Android_Xamarin_App
             return Points.ToArray();
         }
 
+        public System.Collections.ObjectModel.ReadOnlyCollection<double> GetPoints()
+        {
+            return Points.AsReadOnly();
+        }
+
         public void ResetData()
         {
             Points.Clear();

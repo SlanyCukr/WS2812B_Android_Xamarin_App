@@ -133,7 +133,8 @@ namespace WS2812B_Android_Xamarin_App
                 StartActivity(typeof(LoudnessGraphActivity));
 
                 // only for developing purposes - to play around with data in external application
-                // await LedAPI.Log(Points);
+                foreach(var l in Utils.SplitList(GraphDataHolder.Instance.GetPoints(), 1000))
+                    await LedAPI.Log(l);
 
                 // close sleeping animation, hide images
                 SleepingAnimationThread.Abort();

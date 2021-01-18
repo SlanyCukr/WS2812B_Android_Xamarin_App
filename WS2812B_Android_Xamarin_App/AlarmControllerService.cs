@@ -86,8 +86,17 @@ namespace WS2812B_Android_Xamarin_App
             // reset data in data graph handler
             GraphDataHolder.Instance.ResetData();
 
-            /// TODO -> Create function that will create the threads; or just function that the threads will use
             // read loudness
+            SetFirstThread();
+            Thread1.Start();
+
+            // waking up
+            SetSecondThread();
+            Thread2.Start();
+        }
+
+        private void SetFirstThread()
+        {
             Thread1 = new Thread(() =>
             {
                 while (true)
@@ -110,9 +119,10 @@ namespace WS2812B_Android_Xamarin_App
                     Thread.Sleep(1000);
                 }
             });
-            Thread1.Start();
+        }
 
-            // waking up
+        private void SetSecondThread()
+        {
             Thread2 = new Thread(() =>
             {
                 int movingAveragePeriod = Preferences.Get("MOVING_AVERAGE_PERIOD", 5000);
@@ -126,7 +136,7 @@ namespace WS2812B_Android_Xamarin_App
                     if (awakeLoudness == 10000)
                     {
                         // check if we have enough information to calcute it
-                        if(pointsCount >= movingAveragePeriod)
+                        if (pointsCount >= movingAveragePeriod)
                         {
                             // calculate it
                             double sum = 0;
@@ -159,7 +169,6 @@ namespace WS2812B_Android_Xamarin_App
                     Thread.Sleep(50000);
                 }
             });
-            Thread2.Start();
         }
 
         /// <summary>
