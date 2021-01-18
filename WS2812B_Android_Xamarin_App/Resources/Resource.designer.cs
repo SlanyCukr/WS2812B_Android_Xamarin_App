@@ -260,9 +260,6 @@ namespace WS2812B_Android_Xamarin_App
 			// aapt resource value: 0x7F01000F
 			public const int design_snackbar_out = 2130771983;
 			
-			// aapt resource value: 0x7F010010
-			public const int fade_in = 2130771984;
-			
 			static Animation()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

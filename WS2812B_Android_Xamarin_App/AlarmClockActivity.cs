@@ -33,6 +33,7 @@ namespace WS2812B_Android_Xamarin_App
         private ImageView SleepImageView2;
         private ImageView SleepImageView3;
 
+        private Thread SleepingAnimationThread;
 
         private static Intent ControllerServiceIntent;
 
@@ -98,7 +99,7 @@ namespace WS2812B_Android_Xamarin_App
                 ControllerServiceIntent = new Intent(this, typeof(AlarmControllerService));
                 StartForegroundService(ControllerServiceIntent);
                 
-                Thread sleepingAnimation = new Thread(() =>
+                SleepingAnimationThread = new Thread(() =>
                 {
                     // setup
                     SleepImageView1.Alpha = 0;
@@ -116,7 +117,7 @@ namespace WS2812B_Android_Xamarin_App
                         OneSleepAnimation();
                     }
                 });
-                sleepingAnimation.Start();
+                SleepingAnimationThread.Start();
             };
              
             StopClockButton.Click += async (sender, e) =>
@@ -133,6 +134,15 @@ namespace WS2812B_Android_Xamarin_App
 
                 // only for developing purposes - to play around with data in external application
                 // await LedAPI.Log(Points);
+
+                // close sleeping animation, hide images
+                SleepingAnimationThread.Abort();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    SleepImageView1.Visibility = ViewStates.Gone;
+                    SleepImageView2.Visibility = ViewStates.Gone;
+                    SleepImageView3.Visibility = ViewStates.Gone;
+                });
 
                 Preferences.Remove("wakeUpAt");
                 HandleVisibility();
