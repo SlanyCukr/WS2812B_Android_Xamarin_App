@@ -22,31 +22,34 @@
         android:layout_centerHorizontal="true" />
     <ImageView
         android:src="@drawable/kirin_tor"
-        android:layout_width="400px"
-        android:layout_height="400px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/SleepImageView1"
         android:layout_below="@id/SleepTextView"
         android:contentDescription="sleep image"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:visibility="gone"/>
     <ImageView
         android:src="@drawable/fibonacci"
-        android:layout_width="400px"
-        android:layout_height="400px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/SleepImageView2"
         android:layout_below="@id/SleepTextView"
         android:contentDescription="sleep image"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:visibility="gone"
      />
     <ImageView
         android:src="@drawable/growth"
-        android:layout_width="400px"
-        android:layout_height="400px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/SleepImageView3"
         android:layout_below="@id/SleepTextView"
         android:contentDescription="sleep image"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:visibility="gone"/>
     />
     <Button

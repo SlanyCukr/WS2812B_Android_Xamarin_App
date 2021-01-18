@@ -146,7 +146,7 @@ namespace WS2812B_Android_Xamarin_App
 
                         double avg = sum / movingAveragePeriod;
 
-                        // if its the right time to be awaken and person is in REM, wake him up
+                        // if it's the right time to be awaken and person is in REM, wake him up
                         if (IsInREM(avg) && IsTimeToWakeUp())
                         {
                             // turn on the LED stripe, stop adding data to graph
