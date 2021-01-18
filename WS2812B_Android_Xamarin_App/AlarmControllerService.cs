@@ -87,7 +87,6 @@ namespace WS2812B_Android_Xamarin_App
             GraphDataHolder.Instance.ResetData();
 
             /// TODO -> Create function that will create the threads; or just function that the threads will use
-
             // read loudness
             Thread1 = new Thread(() =>
             {

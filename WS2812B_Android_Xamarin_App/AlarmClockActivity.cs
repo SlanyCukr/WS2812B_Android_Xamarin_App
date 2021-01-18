@@ -6,6 +6,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.Content;
 using Android.Views;
+using Android.Views.Animations;
 using Android.Widget;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -28,6 +29,10 @@ namespace WS2812B_Android_Xamarin_App
         private TextView SleepTextView;
         private TimePicker PickTime;
         private Button StopClockButton;
+        private ImageView SleepImageView1;
+        private ImageView SleepImageView2;
+        private ImageView SleepImageView3;
+
 
         private static Intent ControllerServiceIntent;
 
@@ -43,6 +48,9 @@ namespace WS2812B_Android_Xamarin_App
             SleepTextView = FindViewById<TextView>(Resource.Id.SleepTextView);
             PickTime = FindViewById<TimePicker>(Resource.Id.PickTime);
             StopClockButton = FindViewById<Button>(Resource.Id.StopClockButton);
+            SleepImageView1 = FindViewById<ImageView>(Resource.Id.SleepImageView1);
+            SleepImageView2 = FindViewById<ImageView>(Resource.Id.SleepImageView2);
+            SleepImageView3 = FindViewById<ImageView>(Resource.Id.SleepImageView3);
 
             // set visibility of startClockButton and pickTime
             HandleVisibility();
@@ -89,6 +97,51 @@ namespace WS2812B_Android_Xamarin_App
 
                 ControllerServiceIntent = new Intent(this, typeof(AlarmControllerService));
                 StartForegroundService(ControllerServiceIntent);
+                
+                Thread sleepingAnimation = new Thread(() =>
+                {
+                    // setup
+                    SleepImageView1.Alpha = 0;
+                    SleepImageView2.Alpha = 0;
+                    SleepImageView3.Alpha = 0;
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView1.Visibility = ViewStates.Visible;
+                        SleepImageView2.Visibility = ViewStates.Visible;
+                        SleepImageView3.Visibility = ViewStates.Visible;
+                    });
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView1.Animate().Alpha(1.0f).SetDuration(5000).Start();
+                    });
+                    Thread.Sleep(5000);
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView1.Animate().Alpha(0.0f).SetDuration(5000).Start();
+                    });
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView2.Animate().Alpha(1.0f).SetDuration(5000).Start();
+                    });
+                    Thread.Sleep(5000);
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView2.Animate().Alpha(0.0f).SetDuration(5000).Start();
+                    });
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView3.Animate().Alpha(1.0f).SetDuration(5000).Start();
+                    });
+                    Thread.Sleep(5000);
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        SleepImageView3.Animate().Alpha(0.0f).SetDuration(5000).Start();
+                    });
+                });
+                sleepingAnimation.Start();
             };
              
             StopClockButton.Click += async (sender, e) =>
